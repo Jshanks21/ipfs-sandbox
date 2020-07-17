@@ -7,7 +7,7 @@ import { usePoller } from "../hooks"
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { Button } from 'antd';
 
-const INFURA_ID = "2717afb6bf164045b5d5468031b93f87"  // MY INFURA_ID, SWAP IN YOURS!
+const INFURA_ID = "7cc1f1e700c443a7840540140f931831"
 
 const web3Modal = new Web3Modal({
   //network: "mainnet", // optional

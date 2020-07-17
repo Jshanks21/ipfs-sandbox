@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import 'antd/dist/antd.css';
 import { ethers } from "ethers";
 import "./App.css";
-import { Row, Col, Input, Button, Spin } from 'antd';
+import { Row, Col, Input, Button, Spin, Upload } from 'antd';
 import { Transactor } from "./helpers"
 import { useExchangePrice, useGasPrice, useContractLoader, useContractReader } from "./hooks"
 import { Header, Account, Provider, Faucet, Ramp, Address, Contract } from "./components"
@@ -123,6 +123,34 @@ function App() {
         />
       </div>
 
+
+      <div>
+        <input type="file" onChange={(e)=>{
+          setData(e.target.value)
+        }} />
+        <Button style={{margin:8}} loading={sending} size="large" shape="round" type="primary" onClick={async()=>{
+          console.log("UPLOADING...")
+          setSending(true)
+          setIpfsHash()
+          setIpfsContents()
+          const result = await addToIPFS(data)
+          if(result && result.path) {
+            setIpfsHash(result.path)
+          }
+          setSending(false)
+          console.log("RESULT:",result)
+        }}>Upload to IPFS</Button>
+      </div>
+
+      <div style={{padding:32,textAlign: "left"}}>
+        IPFS Hash: <Input value={ipfsHash} onChange={(e)=>{
+          setIpfsHash(e.target.value)
+        }} />
+        {ipfsDisplay}
+      </div>
+      
+
+ 
       <div style={{padding:32,textAlign: "left"}}>
         Enter a bunch of data:
         <TextArea rows={10} value={data} onChange={(e)=>{
@@ -157,13 +185,13 @@ function App() {
         {attestationDisplay}
       </div>
 
-      {/*<div style={{padding:64,textAlign: "left"}}>
+      <div style={{padding:64,textAlign: "left"}}>
         <Contract
-          name={"Attestor"}
+          name={"YoYoToken"}
           provider={injectedProvider}
           address={address}
         />
-      </div>*/}
+      </div>
 
       <div style={{position:'fixed',textAlign:'right',right:0,bottom:20,padding:10}}>
         <Row align="middle" gutter={4}>
