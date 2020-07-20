@@ -12,8 +12,7 @@ contract YoYoToken is ERC721PresetMinterPauserAutoId {
         )
     {}
 
-    function mintWithURI(uint256 _id, string memory ipfsHash) public {
-        mint(msg.sender);
-        _setTokenURI(_id, ipfsHash);
+    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
+        super._setTokenURI(tokenId, _tokenURI);
     }
 }

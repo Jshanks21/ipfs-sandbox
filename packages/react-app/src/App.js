@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import "./App.css";
 import { Row, Col, Input, Button, Spin, Upload } from 'antd';
 import { Transactor } from "./helpers"
-import { useExchangePrice, useGasPrice, useContractLoader, useContractReader } from "./hooks"
+import { useExchangePrice, useGasPrice, useContractLoader, useContractReader, useEventListener, useBlockNumber } from "./hooks"
 import { Header, Account, Provider, Faucet, Ramp, Address, Contract } from "./components"
 const { TextArea } = Input;
 const { BufferList } = require('bl')
@@ -36,6 +36,7 @@ const localProvider = new ethers.providers.JsonRpcProvider(process.env.REACT_APP
 
 function App() {
 
+  const [ids, setIds] = useState([]);
   const [address, setAddress] = useState();
   const [injectedProvider, setInjectedProvider] = useState();
   const price = useExchangePrice(mainnetProvider)
@@ -47,6 +48,7 @@ function App() {
   const writeContracts = useContractLoader(injectedProvider);
 
   const myAttestation = useContractReader(readContracts,"Attestor","attestations",[address],1777);
+  const tokenIds = useEventListener(readContracts, "YoYoToken", "Transfer", localProvider, 1);
 
   const [ data, setData ] = useState()
   const [ sending, setSending ] = useState()
@@ -59,6 +61,8 @@ function App() {
     let result = await getFromIPFS(ipfsHash)
     setIpfsContents(result.toString())
   }
+
+
 
   useEffect(()=>{
     if(ipfsHash) asyncGetFile()
@@ -176,9 +180,11 @@ function App() {
         }} />
         {ipfsDisplay}
 
-        <Button disabled={!ipfsHash} style={{margin:8}} size="large" shape="round" type="primary" onClick={async()=>{
-          tx( writeContracts["Attestor"].attest(ipfsHash) )
-        }}>Attest to this hash on Ethereum</Button>
+        {/* Error using preset. Test against simple 721 mock. Getting eventListener error when displaying tokenIds variable. */}
+        <Button disabled={!address} style={{margin:8}} size="large" shape="round" type="primary" onClick={async()=>{
+          tx( writeContracts["YoYoToken"].mint("0xc783df8a850f42e7F7e57013759C285caa701eB6") )
+          console.log(await tokenIds)
+        }}>Mint Token</Button>
       </div>
 
       <div style={{padding:32,textAlign: "left"}}>

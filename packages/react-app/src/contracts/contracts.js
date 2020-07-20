@@ -1,1 +1,1 @@
-module.exports = ["Attestor","YoYoToken"]
+module.exports = ["Attestor","YoYoMock","YoYoToken"]

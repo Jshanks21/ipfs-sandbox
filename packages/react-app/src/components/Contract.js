@@ -47,17 +47,20 @@ export default function Contract(props) {
           } else if(!displayed[fn.name] && fn.type=="call" && fn.inputs.length===0){
             //console.log("PUSHING",fn.name)
             displayed[fn.name]=true
-            nextDisplay.push(
-              <div>
-                <Row>
-                  <Col span={8} style={{textAlign:"right",opacity:0.333,paddingRight:6,fontSize:24}}>{fn.name}</Col>
-                  <Col span={16}>
-                    <h2>{tryToDisplay(await contract[fn.name]())}</h2>
-                  </Col>
-                </Row>
-                <Divider></Divider>
-              </div>
-            )
+            try{
+              nextDisplay.push(
+                <div>
+                  <Row>
+                    <Col span={8} style={{textAlign:"right",opacity:0.333,paddingRight:6,fontSize:24}}>{fn.name}</Col>
+                    <Col span={16}>
+                      <h2>{tryToDisplay(await contract[fn.name]())}</h2>
+                    </Col>
+                  </Row>
+                  <Divider></Divider>
+                </div>
+              )
+            }catch(e){console.log(e)}
+            
           }else if(!displayed[fn.name] && ( fn.type==="call" || fn.type === "transaction" ) ){
             console.log("RENDERING",fn)
             //console.log("CALL WITH ARGS",fn.name,fn)
